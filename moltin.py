@@ -174,3 +174,17 @@ class Moltin:
             json=json_data)
 
         response.raise_for_status()
+
+    def get_flow_id(self, name: str) -> str:
+        """
+        Method return id flow by name flow
+        :param name:
+        :return:
+        """
+        response = self._session.get(
+            self.url + f'/flows/',
+            headers=self.get_header())
+
+        for flow in response.json()['data']:
+            if flow['name'] == name:
+                return flow['id']
