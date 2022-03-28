@@ -12,7 +12,7 @@ def create_start_menu(moltin, bot, chat_id, query):
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    bot.send_message(reply_markup=reply_markup, text='Выберите рыбу:',
+    bot.send_message(reply_markup=reply_markup, text='Выберите пиццу:',
                      chat_id=chat_id,
                      message_id=query.message.message_id)
 
@@ -31,14 +31,13 @@ def create_cart(bot, moltin, chat_id, query):
             items.append({'id': item['id'], 'name': item['name']})
             message += f'''
 
-
 *{item["name"]}*
 
-{item["quantity"]} кг - за {item["meta"]["display_price"]["with_tax"]["value"]["formatted"]}'''
+{item["quantity"]} шт - за {item["meta"]["display_price"]["with_tax"]["value"]["formatted"]}'''
         message += f'\n\n*Общая цена {cart_price}*'
         keyboard = [[InlineKeyboardButton(f'Оплатить товары на сумму: {cart_price}', callback_data='payment')]]
 
-        keyboard.extend([[InlineKeyboardButton(f'Убрать из корзины {item["name"]}', callback_data=item['id'])]
+        keyboard.extend([[InlineKeyboardButton(f'Убрать из корзины пиццу {item["name"]}', callback_data=item['id'])]
                          for item in items])
 
     keyboard.append([InlineKeyboardButton(f'В меню', callback_data='return_back')])
@@ -66,14 +65,14 @@ def send_product_photo(moltin, bot, product_id, query, reply_markup):
     quantity_item = [item['quantity'] for item in cart_items if item['product_id'] == product_id]
     text_quantity = ''
     if quantity_item:
-        text_quantity = f'\n\nВ корзине уже {quantity_item[0]} кг'
+        text_quantity = f'\n\nВ корзине уже {quantity_item[0]} шт'
 
     message = f'''*{product["name"]}*
 
 {product["description"]}
-{product["meta"]["display_price"]["with_tax"]["formatted"]} за кг.
+{product["meta"]["display_price"]["with_tax"]["formatted"]} за шт.
 
-В наличии: {product["meta"]["stock"]["level"]} кг.{text_quantity}'''
+{text_quantity}'''
 
     bot.send_photo(photo=image_product,
                    caption=dedent(message),

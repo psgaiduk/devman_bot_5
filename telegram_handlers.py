@@ -27,9 +27,7 @@ def handle_menu(bot, update, moltin):
     query = update.callback_query
 
     keyboard = [
-        [InlineKeyboardButton("1 кг", callback_data=f'1 - {query.data}'),
-         InlineKeyboardButton("5 кг", callback_data=f'5 - {query.data}'),
-         InlineKeyboardButton("10 кг", callback_data=f'10 - {query.data}')],
+        [InlineKeyboardButton("Положить в корзину", callback_data=f'1 - {query.data}')],
         [InlineKeyboardButton("Назад", callback_data='return_back')]]
 
     _, cart_items = moltin.get_cart(query.message.chat_id)
@@ -61,9 +59,7 @@ def handle_description(bot, update, moltin):
         moltin.add_to_cart(product_id, chat_id, int(weight))
 
         keyboard = [
-            [InlineKeyboardButton("1 кг", callback_data=f'1 - {product_id}'),
-             InlineKeyboardButton("5 кг", callback_data=f'5 - {product_id}'),
-             InlineKeyboardButton("10 кг", callback_data=f'10 - {product_id}')],
+            [InlineKeyboardButton("Положить в корзину", callback_data=f'1 - {product_id}')],
             [InlineKeyboardButton("Назад", callback_data='return_back')],
             [InlineKeyboardButton("Корзина", callback_data='cart')],
         ]
