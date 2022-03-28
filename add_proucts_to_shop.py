@@ -41,6 +41,17 @@ def main():
 
             moltin.add_product(name=name, description=description, price=price, image=image_link)
 
+    with open(os.path.join(os.path.dirname(__file__), 'pizzeria', 'addresses.json'), encoding='utf-8') as file:
+
+        addresses = json.load(file)
+
+        for address in addresses:
+            moltin.create_entry_in_flows('pizzeria', {
+                'address': address['address']['full'],
+                'alias': address['alias'],
+                'Longitude': address['coordinates']['lat'],
+                'Latitude': address['coordinates']['lat']})
+
 
 if __name__ == '__main__':
     main()

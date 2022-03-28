@@ -175,16 +175,66 @@ class Moltin:
 
         response.raise_for_status()
 
-    def get_flow_id(self, name: str) -> str:
+    def get_flow_slug(self, name: str) -> str:
         """
         Method return id flow by name flow
         :param name:
         :return:
         """
-        response = self._session.get(
-            self.url + f'/flows/',
-            headers=self.get_header())
+
+        logger.info(f'Start work add image for product\nname = {name}\n')
+
+        response = self._session.get(self.url + '/flows/', headers=self.get_header())
+
+        logger.debug(f'get all flows\n'
+                     f'response = {response.json()}\n')
 
         for flow in response.json()['data']:
+
             if flow['name'] == name:
-                return flow['id']
+
+                logger.debug(f'Get need flow\n'
+                             f'flow = {flow}\n')
+
+                return flow['slug']
+
+    def create_flow(self, name: str, description: str) -> None:
+        """
+        Method create flow in shop
+        :param name:
+        :param description:
+        :return:
+        """
+
+        logger.info(f'Start work create flow\nname = {name}\ndescription = {description}')
+
+        json_data = {
+            'data': {
+                'type': 'flow',
+                'name': name,
+                'slug': transliterate_text(name),
+                'description': description,
+                'enabled': True,
+            },
+        }
+
+        response = self._session.post(self.url + '/flows/', headers=self.get_header(), json=json_data)
+
+        logger.debug(f'Create flow\nresponse = {response.json()}\n')
+
+    def create_entry_in_flows(self, slug: str, values: dict):
+
+        logger.info(f'Start work create flow\nslug = {slug}\nvalues = {values}')
+
+        json_data = {
+            'data': {
+                'type': 'entry',
+            },
+        }
+
+        for key, value in values.items():
+            json_data['data'][key] = value
+
+        response = self._session.post(self.url + f'/flows/{slug}/entries', headers=self.get_header(), json=json_data)
+
+        logger.debug(f'Create flow\nresponse = {response.json()}\n')
