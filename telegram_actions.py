@@ -5,10 +5,21 @@ from textwrap import dedent
 logger = logging.getLogger('app_logger')
 
 
-def create_start_menu(moltin, bot, chat_id, query):
+def create_start_menu(moltin, bot, chat_id, query, start_page=0, end_page=5):
     products = moltin.get_all_products()
 
     keyboard = [[InlineKeyboardButton(product["name"], callback_data=product['id'])] for product in products]
+
+    len_keyboard = len(keyboard)
+
+    keyboard = keyboard[start_page:end_page]
+
+    if end_page < len_keyboard:
+        keyboard.append([InlineKeyboardButton("На следующую страницу",
+                                              callback_data=f'page - {end_page} - {end_page + 10}')])
+    if start_page > 0:
+        keyboard.append([InlineKeyboardButton("На предыдущую страницу",
+                                              callback_data=f'page - {start_page - 10} - {start_page}')])
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 

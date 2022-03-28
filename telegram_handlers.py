@@ -17,6 +17,10 @@ def start(_, update, moltin):
 
     keyboard = [[InlineKeyboardButton(product["name"], callback_data=product['id'])] for product in products]
 
+    if len(keyboard) > 10:
+        keyboard = keyboard[:10]
+        keyboard.append([InlineKeyboardButton("На следующую страницу", callback_data=f'page - 10 - 20')])
+
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     update.message.reply_text('Выберите рыбу:', reply_markup=reply_markup)
@@ -25,6 +29,16 @@ def start(_, update, moltin):
 
 def handle_menu(bot, update, moltin):
     query = update.callback_query
+
+    chat_id = query.message.chat_id
+
+    if 'page' in query.data:
+
+        _, start_page, end_page = query.data.split('-')
+
+        create_start_menu(moltin, bot, chat_id, query, int(start_page), int(end_page))
+
+        return "HANDLE_MENU"
 
     keyboard = [
         [InlineKeyboardButton("Положить в корзину", callback_data=f'1 - {query.data}')],
